@@ -2,8 +2,10 @@ package org.example.controller;
 
 import lombok.AllArgsConstructor;
 import org.example.dto.SocksDto;
+import org.example.model.Operation;
 import org.example.model.Sock;
 import org.example.service.SocksService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,6 +16,7 @@ public class SocksController {
     SocksService service;
 
     @PostMapping("/income")
+    @ResponseStatus(code = HttpStatus.OK)
     public Sock incomeSocks(@RequestBody SocksDto income){
         return service.incomeSocks(income);
     }
@@ -24,7 +27,7 @@ public class SocksController {
     }
 
     @GetMapping
-    public int getQuantity(@RequestParam String color, @RequestParam String operation,@RequestParam int cottonPart){
+    public int getQuantity(@RequestParam String color, @RequestParam Operation operation, @RequestParam int cottonPart){
         return service.getQuantity(color,operation,cottonPart);
     }
 

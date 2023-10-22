@@ -1,9 +1,14 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "socks")
+@Setter
+@Getter
 public class Sock {
 
     @Id
