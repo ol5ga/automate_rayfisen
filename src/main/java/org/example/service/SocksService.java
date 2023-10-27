@@ -1,8 +1,7 @@
 package org.example.service;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.example.StorageException;
+import org.example.exeption.StorageException;
 import org.example.dto.SocksDto;
 import org.example.model.Operation;
 import org.example.model.Sock;
@@ -10,7 +9,6 @@ import org.example.repository.SocksRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.xml.bind.ValidationException;
 import java.util.List;
 
 @Service
@@ -33,10 +31,12 @@ public class SocksService {
 
     public Sock outcomeSocks(SocksDto outcome) {
         Sock inDb = repository.findByColorAndCottonPart(outcome.getColor(), outcome.getCottonPart());
-        if (inDb != null) {
-            inDb.setQuantity(inDb.getQuantity() - outcome.getQuantity());
-        } else {
+        if (inDb == null) {
             throw new StorageException("Таких носков нет на складе");
+        } else if (inDb.getQuantity() < outcome.getQuantity()) {
+            throw new StorageException("На складе недостаточно носков");
+        } else {
+            inDb.setQuantity(inDb.getQuantity() - outcome.getQuantity());
         }
         return repository.save(inDb);
     }
@@ -75,11 +75,4 @@ public class SocksService {
         } return value;
     }
 
-    public Sock getById(int id) {
-        return Sock.builder()
-                .color("red")
-                .cottonPart(15)
-                .quantity(10)
-                .build();
-    }
 }
